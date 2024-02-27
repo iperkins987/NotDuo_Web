@@ -19,7 +19,7 @@ firebase_admin.initialize_app(cred, {
 def getUser(username):
 
     # Get the user reference from the db
-    user_ref = db.reference(f"Users/{username}")
+    user_ref = db.reference(f"users/{username}")
     user_obj = user_ref.get()
 
     # We found the user
