@@ -63,7 +63,10 @@ def sendNotification(user):
 
 
 @app.route("/")
-@app.route("/login", methods=["POST"])
+def index():
+    return render_template('index.html')
+
+@app.route("/login", methods=["POST", "GET"])
 def login():
     error = ""
 

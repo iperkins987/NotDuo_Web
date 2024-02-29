@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href={{ url_for("static", filename="index.css") }}>
+{% endblock %}
+
+{% block content %}
+
+<body style="margin: 0;">
+    <div class="section-1">
+
+        <div class="header">
+            <div class="header-logo">MegaCorp™ Industries</div>
+            <div class="header-links">
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Store</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href=/login>Sign in</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="left-content">
+                <div class="hero-text">Welcome to MegaCorp™!</div>
+                <div class="hero-subtext">We've built a ton of awesome stuff at MegaCorp, and all it took was the blood, sweat and tears of countless faceless interns!
+                Join our team today!
+                </div>
+                <button>Apply</button>
+            </div>
+
+            <div class="right-content">
+                <div class="section-1-img">
+                    <img src="../static/Logo.webp" alt="Logo">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="section-2">
+        <div class="info-headline">Some random information.</div>
+
+        <div class="card-container">
+            <div class="card">
+                <div class="card-img"></div>
+                <div class="card-text">this is some subtext under an illustration or image</div>
+            </div>
+            <div class="card">
+                <div class="card-img"></div>
+                <div class="card-text">this is some subtext under an illustration or image</div>
+            </div>
+            <div class="card">
+                <div class="card-img"></div>
+                <div class="card-text">this is some subtext under an illustration or image</div>
+            </div>
+            <div class="card">
+                <div class="card-img"></div>
+                <div class="card-text">this is some subtext under an illustration or image</div>
+            </div>
+        </div>
+    </div> -->
+
+    <div class="section-3">
+        <div class="quote-text">If you're interested in working 60 hours a week of unpaid labor just for the slightest possibility of an underpaid full-time offer, MegaCorp™ is definitely for you!</div>
+        <div class="attribution">- Intern #69420</div>
+    </div>
+
+    <div class="section-4">
+        <div class="cta-container">
+            <div class="cta-content">
+                <div class="cta-headline">We know where you live!</div>
+                <div class="cta-subtext">Sign up for our product by clicking that button right over there, or else!</div>
+            </div>
+            <button class="cta-button">Sign up</button>
+        </div>
+    </div>
+
+    <div class="footer">Copyright © MegaCorp™ 2096</div>
+</body>
+
+{% endblock %}
