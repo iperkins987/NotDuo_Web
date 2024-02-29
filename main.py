@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import messaging
 import hashlib
+import uuid
 from User import User
 
 # Flask setup
@@ -46,20 +47,27 @@ def isValidPassword(user, password):
     return (user.password_hash == password_hash)
 
 
-def sendNotification(user):
+def sendNotification(user, uid):
 
     # Build the notification
     message = messaging.Message(
         notification=messaging.Notification(
             title="Hey Hey Hey!",
-            body="Its Fat Albert!!"
+            body="Its Fat Albert!!",
         ),
+        data={"uid": uid},
         token=user.device_token
     )
 
     # Send the notification
     response = messaging.send(message)
     print('Successfully sent message:', response)
+
+
+@app.route("/notduo-response", methods=["POST"])
+def notDuoResponse():
+    data = request.json
+    print("Received data:", data)
 
 
 @app.route("/")
@@ -81,7 +89,9 @@ def login():
 
             # Check if their password is correct
             if (isValidPassword(user, password)):
-                sendNotification(user)
+                uid = uuid.uuid4().int
+                print("UID IS ", uid)
+                sendNotification(user, str(uid))
                 return redirect(url_for("home"))
             else:
                 error = "Incorrect Password!"
