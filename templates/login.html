@@ -1,21 +1,32 @@
 {% extends "base.html" %}
 
-<!-- {% block stylesheet %}
-<link rel="stylesheet" href={{ url_for("static", filename="styles.css") }}>
-{% endblock %} -->
+{% block stylesheet %}
+<link rel="stylesheet" href={{ url_for("static", filename="login.css") }}>
+{% endblock %}
 
+<body>
 {% block content %}
 
-<h1>NotDuo Sample Webpage</h1>
+    <div class="section-1-img">
+        <img src="../static/Logo.webp" alt="Logo">
+    </div>
 
-<form method="post" action="/login">
-    <input type="username" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="password">
-    <button type="submit">Login</button>
-</form>
+    <div class="container">
+        <h1>Welcome!</h1>
+        
+        <div class="sign-form">
+            <form method="post" action="/login">
+                <input class="uname" type="username" name="username" placeholder="Username">
+                <input class="pass" type="password" name="password" placeholder="Password">
+                <button type="submit">Sign in</button>
+            </form>
+        </div>
+        
+    </div>
 
-{% if error %}
+    {% if error %}
     <p>{{ error }}</p>
-{% endif %}
-
-{% endblock %}
+    {% endif %}
+    
+    {% endblock %}
+</body>
