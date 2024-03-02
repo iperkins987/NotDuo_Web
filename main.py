@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from firebase_admin import messaging
 import hashlib
 import uuid
+import time
 from User import User
 
 # Flask setup
@@ -47,32 +48,50 @@ def isValidPassword(user, password):
     return (user.password_hash == password_hash)
 
 
-def sendNotification(user, uid):
+def sendNotification(user):
 
     # Build the notification
     message = messaging.Message(
         notification=messaging.Notification(
-            title="Hey Hey Hey!",
-            body="Its Fat Albert!!",
+            title="NotDuo Authentication",
+            body="Please verify a login attempt!",
         ),
-        data={"uid": uid},
         token=user.device_token
     )
 
     # Send the notification
     response = messaging.send(message)
-    print('Successfully sent message:', response)
 
 
-@app.route("/notduo-response", methods=["POST"])
-def notDuoResponse():
-    data = request.json
-    print("Received data:", data)
+def AddAuthRequest(user, uid):
+    user_ref = db.reference(f"users/{user.username}")
+    user_ref.update({"authToken": str(uid)})
+
+
+def GetAuthResponse(user, uid):
+    user_ref = db.reference(f"users/{user.username}/responseToken")
+    token = user_ref.get()
+
+    while (token != uid):
+        time.sleep(1)
+        user_ref = db.reference(f"users/{user.username}/responseToken")
+        print("UID IS", token)
+        print("RESPONSE TOKEN IS", token)
+        token = user_ref.get()
+
+
+    return True
+
+
+def resetAuthResponse(user):
+    user_ref = db.reference(f"users/{user.username}")
+    user_ref.update({"responseToken": "NO_TOKEN"})
 
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -92,10 +111,15 @@ def login():
 
             # Check if their password is correct
             if (isValidPassword(user, password)):
-                uid = uuid.uuid4().int
-                print("UID IS ", uid)
-                sendNotification(user, str(uid))
-                return redirect(url_for("home"))
+
+                uid = str(uuid.uuid4().int)
+                print("UID IS", uid)
+                sendNotification(user)
+                AddAuthRequest(user, uid)
+
+                if (GetAuthResponse(user, uid)):
+                    resetAuthResponse(user)
+                    return redirect(url_for("home"))
             else:
                 error = "Incorrect Password!"
         else:
