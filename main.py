@@ -3,7 +3,7 @@ from NotDuoAuthentication import *
 
 # Flask and NotDuoAuthenticator setup
 app = Flask(__name__)
-notduo_auth = NotDuoAuthenticator("serviceAccountKey.json", "https://notduo-99e30-default-rtdb.firebaseio.com")
+notduo_auth = NotDuoAuthenticator("serviceAccountKey.json", "https://notduo-99e30-default-rtdb.firebaseio.com", 30)
 
 
 @app.route("/")
@@ -13,7 +13,7 @@ def index():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    error = ""
+    error_message = ""
 
     # If we clicked submit on the form
     if (request.method == "POST"):
@@ -23,12 +23,13 @@ def login():
         password = request.form["password"]
 
         # Attempt to authenticate with NotDuo
-        is_auth, notduo_user = notduo_auth.authenticate(username, password)
+        is_auth, error_message = notduo_auth.authenticate(username, password)
 
         if (is_auth):
+            notduo_user = notduo_auth.get_auth_user(username)
             return render_template("home.html", user=notduo_user)
 
-    return render_template("login.html", error=error)
+    return render_template("login.html", error=error_message)
 
 
 if __name__ == "__main__":
